@@ -13,7 +13,17 @@ const columns = [
 
 export default function DataTable(props) {
   const { fullData, navigation } = props;
-  const rows = fullData;
+  //   const finalData = fullData.map((value) => {
+  //     if (value.statecode === "TT") {
+  //       return value;
+  //     } else {
+  //       return value;
+  //     }
+  //   });
+  const finalData = fullData.slice(1);
+  console.log(finalData);
+
+  const rows = finalData;
   return (
     <View
       style={{
