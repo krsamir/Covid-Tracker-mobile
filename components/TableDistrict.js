@@ -4,16 +4,19 @@ import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 const columns = [
-  { field: "state", headerName: "State", width: 130 },
+  { field: "name", headerName: "District", width: 130 },
   { field: "confirmed", headerName: "Confirmed", width: 130 },
   { field: "active", headerName: "Active", width: 130 },
   { field: "recovered", headerName: "Recovered", width: 130 },
-  { field: "deaths", headerName: "Deaths", width: 130 },
+  { field: "deceased", headerName: "Deaths", width: 130 },
 ];
 
 export default function DataTable(props) {
-  const { fullData, navigation } = props;
-  const rows = fullData;
+  const { data } = props;
+  const finalData = data.map((value) => {
+    return value[0];
+  });
+  const rows = finalData;
   return (
     <View
       style={{
@@ -25,12 +28,6 @@ export default function DataTable(props) {
         rows={rows}
         columns={columns}
         pageSize={5}
-        onCellClick={(value) => {
-          navigation.navigate("district", {
-            name: value.row.state,
-            state: value.row,
-          });
-        }}
         pageSize={40}
         autoHeight={true}
       />

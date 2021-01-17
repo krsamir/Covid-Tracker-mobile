@@ -1,17 +1,15 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import Table from "./components/Table";
+import { View } from "react-native";
+import ParentComponent from "./ParentComponent";
+import District from "./components/District";
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { fetchApiData, fetchDistrictApi } from "./API/api";
-import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
-import Cards from "./components/Cards";
-const darkTheme = createMuiTheme({
-  palette: {
-    type: "light",
-  },
-});
+const Stack = createStackNavigator();
 export default function App() {
+  const [fullData, setFullData] = useState([]);
+  const [DistrictData, setDistrictData] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,15 +23,24 @@ export default function App() {
     };
     fetchData();
   }, []);
-  const [fullData, setFullData] = useState([]);
-  const [DistrictData, setDistrictData] = useState({});
   return (
-    <ThemeProvider theme={darkTheme}>
-      <View>
-        <Cards fullData={fullData[0]} />
-        <Table fullData={fullData} />
-        <StatusBar style="auto" />
-      </View>
-    </ThemeProvider>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="home">
+        <Stack.Screen
+          name="home"
+          component={ParentComponent}
+          options={{ title: "Covid Dashboard" }}
+        />
+        <Stack.Screen name="district" options={{ title: "District" }}>
+          {(props) => (
+            <District
+              {...props}
+              DistrictData={DistrictData}
+              fullData={fullData}
+            />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
