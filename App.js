@@ -1,21 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import Table from "./components/Table";
+import { fetchApiData, fetchDistrictApi } from "./API/api";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import Cards from "./components/Cards";
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "light",
   },
 });
+export default function App() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedData = await fetchApiData();
+        const fetchedDistrictData = await fetchDistrictApi();
+        setFullData(fetchedData);
+        setDistrictData(fetchedDistrictData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+  const [fullData, setFullData] = useState([]);
+  const [DistrictData, setDistrictData] = useState({});
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <View>
+        <Cards fullData={fullData[0]} />
+        <Table fullData={fullData} />
+        <StatusBar style="auto" />
+      </View>
+    </ThemeProvider>
+  );
+}
